@@ -1,0 +1,14 @@
+# Build output
+build/
+DerivedData/
+
+# Xcode user-specific state (the .xcodeproj itself is committed so you can open & run directly)
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/
+
+# macOS
+.DS_Store
+
+# Local AI assistant notes (not for public repo)
+CLAUDE.md

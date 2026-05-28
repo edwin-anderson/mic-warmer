@@ -1,0 +1,41 @@
+name: MicWarmer
+options:
+  bundleIdPrefix: com.edwin
+  deploymentTarget:
+    macOS: "14.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_IDENTITY: "-"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_ENTITLEMENTS: MicWarmer.entitlements
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_HARDENED_RUNTIME: YES
+packages:
+  KeyboardShortcuts:
+    url: https://github.com/sindresorhus/KeyboardShortcuts
+    from: "1.10.0"
+targets:
+  MicWarmer:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: MicWarmer
+    dependencies:
+      - package: KeyboardShortcuts
+        product: KeyboardShortcuts
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.edwin.MicWarmer
+    info:
+      path: MicWarmer/Info.plist
+      properties:
+        LSUIElement: true
+        CFBundleDisplayName: Mic Warmer
+        CFBundleName: MicWarmer
+        LSMinimumSystemVersion: "14.0"
+        NSHighResolutionCapable: true
+        NSMicrophoneUsageDescription: Mic Warmer briefly opens the microphone to keep it powered on so dictation activates instantly. Audio is never recorded, saved, or sent anywhere.
