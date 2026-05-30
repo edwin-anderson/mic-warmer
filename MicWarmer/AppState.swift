@@ -15,6 +15,11 @@ final class AppState: ObservableObject {
     private var recorderWindow: NSWindow?
 
     private init() {
+        // If the mic stops capturing and the watchdog can't recover it, stop showing "warm" so the
+        // menu-bar icon never lies about the mic's real state. Delivered on the main thread.
+        keepWarm.onWarmthLost = { [weak self] in
+            MainActor.assumeIsolated { self?.isWarm = false }
+        }
         KeyboardShortcuts.onKeyDown(for: .toggleWarm) {
             MainActor.assumeIsolated {
                 AppState.shared.toggleWarm()
@@ -58,13 +63,14 @@ final class AppState: ObservableObject {
 
     private func startWarming() {
         keepWarm.start { success in
-            // start(completion:) always calls back on the main thread.
+            // start(completion:) always calls back on the main thread, and reports true only once
+            // real audio is confirmed flowing — so isWarm reflects the mic's actual state.
             MainActor.assumeIsolated {
                 if success {
                     AppState.shared.isWarm = true
                 } else {
                     AppState.shared.isWarm = false
-                    AppState.shared.showNoMicAlert()
+                    AppState.shared.showCaptureFailedAlert()
                 }
             }
         }
@@ -88,6 +94,27 @@ final class AppState: ObservableObject {
         let alert = NSAlert()
         alert.messageText = "Microphone access is turned off"
         alert.informativeText = "Mic Warmer needs microphone access to keep the mic warm. Turn it on in System Settings ▸ Privacy & Security ▸ Microphone, then try again."
+        alert.addButton(withTitle: "Open System Settings")
+        alert.addButton(withTitle: "Cancel")
+        NSApp.activate(ignoringOtherApps: true)
+        if alert.runModal() == .alertFirstButtonReturn,
+           let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Microphone") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
+    // Warming failed. Either there's genuinely no input device, or macOS started the session but
+    // delivered no audio — which almost always means the microphone is being silently blocked
+    // (commonly after a rebuild/reinstall, because ad-hoc signing changes the app's code hash and
+    // invalidates the old permission grant). Point the user at the fix for each case.
+    private func showCaptureFailedAlert() {
+        guard AVCaptureDevice.default(for: .audio) != nil else {
+            showNoMicAlert()
+            return
+        }
+        let alert = NSAlert()
+        alert.messageText = "Mic Warmer couldn’t turn the microphone on"
+        alert.informativeText = "macOS started the audio session but isn’t delivering any audio — microphone access is being blocked. This often happens after the app is rebuilt or reinstalled.\n\nOpen System Settings ▸ Privacy & Security ▸ Microphone, switch Mic Warmer off and back on (or remove and re-add it), then try warming again."
         alert.addButton(withTitle: "Open System Settings")
         alert.addButton(withTitle: "Cancel")
         NSApp.activate(ignoringOtherApps: true)
