@@ -15,6 +15,27 @@ always instant.
 every sample away immediately — nothing is recorded, saved, or sent anywhere. The
 only effect is that the mic stays powered on.
 
+## Works with whatever mic you use
+
+Mic Warmer warms **all of your microphones at once** — the built-in mic, an external
+display mic (like a Studio Display), USB mics, and so on — and follows along
+automatically when you dock, undock, or plug one in. You never have to tell it which
+mic to use.
+
+This matters because dictation apps usually pick the mic for you. Wispr Flow's
+**Auto-detect** setting, for example, switches between your built-in and external
+mics depending on what's connected — so the mic it ends up using isn't always your
+Mac's "default" input. By keeping every mic warm, Mic Warmer makes sure that
+whichever one your app lands on is already awake. (This is why a delay could show up
+only when docked: the dictation app was using a different mic than the system
+default.)
+
+**Bluetooth mics (AirPods, etc.) are skipped on purpose.** Holding a Bluetooth mic
+open forces it into low-quality "call" mode, which would wreck your music/playback
+the whole time you're warmed. The trade-off: a Bluetooth mic won't be pre-warmed, so
+dictating through AirPods can still clip the first word — use a built-in or wired mic
+for instant dictation.
+
 ## How to use
 
 1. Launch Mic Warmer — it lives in the menu bar (no Dock icon). It starts **off**.
@@ -38,9 +59,10 @@ The menu-bar icon shows the state at a glance:
   of the app.
 - The first time you warm the mic, macOS asks for **microphone permission** — click
   Allow. (If you ever rebuild/reinstall the app, macOS may ask again.)
-- On **AirPods / Bluetooth** headsets, holding the mic open switches them into
-  call-quality mode, which lowers playback quality. That's a Bluetooth limitation —
-  use the built-in mic if it bothers you.
+- With several mics connected, **each one is held open** while warm, so you may see
+  more than one mic listed as "in use" in Control Center. That's expected — Mic Warmer
+  is keeping each awake. (Bluetooth mics are skipped, so your headphones keep full
+  audio quality — see *Works with whatever mic you use* above.)
 
 ## Install
 
