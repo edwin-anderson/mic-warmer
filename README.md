@@ -30,6 +30,15 @@ whichever one your app lands on is already awake. (This is why a delay could sho
 only when docked: the dictation app was using a different mic than the system
 default.)
 
+**Does warming several mics mix them into your recording? No.** This is the natural
+worry, so to be clear: macOS keeps every app's microphone audio completely separate.
+Each app gets its own private stream from the *one* mic it opened. Your dictation app
+records only the single mic it chose — Mic Warmer just keeps the *other* mics powered
+and instantly throws away everything it captures from them. The mics are never mixed
+together, so there's no echo, no doubling, and no second mic bleeding into your
+recording. Warming a mic only keeps the hardware awake; it doesn't route that mic's
+sound anywhere.
+
 **Bluetooth mics (AirPods, etc.) are skipped on purpose.** Holding a Bluetooth mic
 open forces it into low-quality "call" mode, which would wreck your music/playback
 the whole time you're warmed. The trade-off: a Bluetooth mic won't be pre-warmed, so
